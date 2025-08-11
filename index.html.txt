@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yu-Gi-Oh Web</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🃏 Yu-Gi-Oh Web</h1>
+    <p class="status" id="status">Escolha sua carta para começar!</p>
+
+    <div class="lp-container">
+      <div>❤️ Jogador: <span id="lp-jogador">8000</span></div>
+      <div>💀 Oponente: <span id="lp-oponente">8000</span></div>
+    </div>
+
+    <h2>Suas Cartas:</h2>
+    <div class="cartas" id="cartas-jogador"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
