@@ -98,5 +98,119 @@ function verificarFim(mensagemRodada) {
     status.textContent = mensagemRodada;
   }
 }
+const cartas = [
+  {
+    nome: "Dragão Branco",
+    ataque: 3000,
+    imagem: "img/dragao-branco.jpg"
+  },
+  {
+    nome: "Mago Negro",
+    ataque: 2500,
+    imagem: "img/mago-negro.jpg"
+  },
+  {
+    nome: "Kuriboh",
+    ataque: 300,
+    imagem: "img/kuriboh.jpg"
+  },
+  {
+    nome: "Caveira Invocada",
+    ataque: 2500,
+    imagem: "img/caveira.jpg"
+  }
+];
+
+let baralhoJogador = [];
+let baralhoOponente = [];
+let lpJogador = 8000;
+let lpOponente = 8000;
+
+const cartasDiv = document.getElementById("cartas-jogador");
+const campoJogadorDiv = document.getElementById("campo-jogador");
+const campoOponenteDiv = document.getElementById("campo-oponente");
+const status = document.getElementById("status");
+
+function embaralhar(lista) {
+  return [...lista].sort(() => Math.random() - 0.5);
+}
+
+function iniciarJogo() {
+  baralhoJogador = embaralhar(cartas).slice(0, 5);
+  baralhoOponente = embaralhar(cartas).slice(0, 5);
+  lpJogador = 8000;
+  lpOponente = 8000;
+  status.textContent = "Seu turno! Escolha uma carta.";
+  atualizarMao();
+  limparCampos();
+}
+
+function atualizarMao() {
+  cartasDiv.innerHTML = "";
+  baralhoJogador.forEach((carta, index) => {
+    const img = document.createElement("img");
+    img.src = carta.imagem;
+    img.className = "carta-img";
+    img.title = `${carta.nome} (${carta.ataque})`;
+    img.onclick = () => jogarTurno(index);
+    cartasDiv.appendChild(img);
+  });
+}
+
+function limparCampos() {
+  campoJogadorDiv.innerHTML = "";
+  campoOponenteDiv.innerHTML = "";
+}
+
+function jogarTurno(indiceJogador) {
+  const cartaJogador = baralhoJogador.splice(indiceJogador, 1)[0];
+  const cartaOponente = baralhoOponente.shift();
+
+  // Exibir no campo
+  campoJogadorDiv.innerHTML = `<img src="${cartaJogador.imagem}" class="carta-img" title="${cartaJogador.nome} (${cartaJogador.ataque})">`;
+  campoOponenteDiv.innerHTML = `<img src="${cartaOponente.imagem}" class="carta-img" title="${cartaOponente.nome} (${cartaOponente.ataque})">`;
+
+  // Comparar ataques
+  let resultado = `${cartaJogador.nome} (${cartaJogador.ataque}) vs ${cartaOponente.nome} (${cartaOponente.ataque}) — `;
+
+  if (cartaJogador.ataque > cartaOponente.ataque) {
+    const dano = cartaJogador.ataque - cartaOponente.ataque;
+    lpOponente -= dano;
+    resultado += `Você causou ${dano} de dano!`;
+  } else if (cartaJogador.ataque < cartaOponente.ataque) {
+    const dano = cartaOponente.ataque - cartaJogador.ataque;
+    lpJogador -= dano;
+    resultado += `Você sofreu ${dano} de dano!`;
+  } else {
+    resultado += "Empate!";
+  }
+
+  status.textContent = resultado + ` LP: Você ${lpJogador} / Oponente ${lpOponente}`;
+  atualizarMao();
+
+  verificarFim();
+}
+
+function verificarFim() {
+  if (lpJogador <= 0) {
+    status.textContent = "💀 Você perdeu o duelo!";
+    cartasDiv.innerHTML = "";
+  } else if (lpOponente <= 0) {
+    status.textContent = "🏆 Você venceu o duelo!";
+    cartasDiv.innerHTML = "";
+  } else if (baralhoJogador.length === 0) {
+    if (lpJogador > lpOponente) {
+      status.textContent = "🏆 Vitória por LP!";
+    } else if (lpJogador < lpOponente) {
+      status.textContent = "💀 Derrota por LP!";
+    } else {
+      status.textContent = "⚖️ Empate!";
+    }
+    cartasDiv.innerHTML = "";
+  }
+}
 
 iniciarJogo();
+
+iniciarJogo();
+
